@@ -1,18 +1,11 @@
 package com.mahmoud.car;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 import java.util.UUID;
 
 public class CarDao {
 
     private static Car[] cars;
-
-    public static class CarDAOException extends RuntimeException{
-        public CarDAOException(String message) {
-            super(message);
-        }
-    }
 
     static {
         cars = new Car[]{
@@ -23,18 +16,7 @@ public class CarDao {
         };
     }
 
-    public static Car[] getAllAvailableCars(){
-        if(cars.length == 0) throw new CarDAOException("No available cars!");
+    public Car[] getAllCars(){
         return cars;
-    }
-
-    public Optional<Car> getCarByBrand(String carBrand){
-
-        for(Car car : cars){
-            if(car.getBrand().name().equalsIgnoreCase(carBrand)) return Optional.of(car);
-        }
-
-        System.out.println("\nPlease type a valid car brand\n");
-        return Optional.empty();
     }
 }

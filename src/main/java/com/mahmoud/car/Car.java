@@ -1,6 +1,7 @@
 package com.mahmoud.car;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Car {
@@ -10,7 +11,6 @@ public class Car {
     private BigDecimal rentalPricePerDay;
     private Brand brand;
     private boolean isElectric;
-    private boolean isAvailable;
 
     public Car(UUID id, String regNumber, BigDecimal rentalPricePerDay, Brand brand, boolean isElectric, boolean isAvailable) {
         this.id = id;
@@ -18,7 +18,6 @@ public class Car {
         this.rentalPricePerDay = rentalPricePerDay;
         this.brand = brand;
         this.isElectric = isElectric;
-        this.isAvailable = isAvailable;
     }
 
     public String getRegNumber() {
@@ -41,10 +40,6 @@ public class Car {
         return isElectric;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
     @Override
     public String toString() {
         return "Car{" +
@@ -53,7 +48,14 @@ public class Car {
                 ", rentalPricePerDay=" + rentalPricePerDay +
                 ", brand=" + brand +
                 ", isElectric=" + isElectric +
-                ", isAvailable=" + isAvailable +
                 "}";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Car car = (Car) o;
+        return isElectric == car.isElectric && Objects.equals(id, car.id) && Objects.equals(regNumber, car.regNumber) && Objects.equals(rentalPricePerDay, car.rentalPricePerDay) && brand == car.brand;
+    }
+
 }

@@ -5,17 +5,20 @@ import java.util.UUID;
 
 public class UserService {
 
-    private UserDao userDao;
+    private UserDao userDao = new UserDao();
 
-    public UserService(UserDao userDao){
-        this.userDao = userDao;
+    public User[] getAllUsers(){
+        return userDao.getAllUsers();
     }
 
-    public static User[] viewAllUsersService(){
-        return UserDao.getAllUsers();
-    }
+    public Optional<User> getUserById(UUID userId){
 
-    public static  Optional<User> getUserbyId(String userId){
-        return UserDao.getUserById(UUID.fromString(userId));
+        var users = getAllUsers();
+
+        for (User user : users) {
+            if (user.getId().equals(userId)) return Optional.of(user);
+        }
+
+        return Optional.empty();
     }
 }

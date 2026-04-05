@@ -1,20 +1,24 @@
 package com.mahmoud.car;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class CarService {
 
-    private CarDao carDao;
+    private CarDao carDao = new CarDao();
 
-    public CarService(CarDao carDao) {
-        this.carDao = carDao;
+    public Car[] getAllCars() {
+        return carDao.getAllCars();
     }
 
-    public static Car[] viewAllCars() {
-        return CarDao.getAllAvailableCars();
-    }
+    public Optional<Car> getCarById(UUID carId) {
 
-    public Optional<Car> getCarByBrandService(String brand) {
-        return carDao.getCarByBrand(brand);
+        var cars = getAllCars();
+
+        for(Car car : cars){
+            if(car.getId().equals(carId)) return Optional.of(car);
+        }
+
+        return Optional.empty();
     }
 }

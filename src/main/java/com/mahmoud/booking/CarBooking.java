@@ -4,25 +4,24 @@ import com.mahmoud.car.Car;
 import com.mahmoud.user.User;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class CarBooking {
 
-    private UUID Id;
+    private UUID id;
     private User user;
     private Car car;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private BigDecimal price;
     private BookingStatus status;
     private LocalDateTime bookedAt;
 
     public CarBooking(){}
 
-    public CarBooking(UUID id, User user, Car car, LocalDate startDate, LocalDate endDate, BigDecimal price, BookingStatus status, LocalDateTime bookedAt) {
-        Id = id;
+    public CarBooking(UUID id, User user, Car car, LocalDateTime startDate, LocalDateTime endDate, BigDecimal price, BookingStatus status, LocalDateTime bookedAt) {
+        this.id = id;
         this.user = user;
         this.car = car;
         this.startDate = startDate;
@@ -33,7 +32,7 @@ public class CarBooking {
     }
 
     public UUID getId() {
-        return Id;
+        return id;
     }
 
     public User getUser() {
@@ -44,11 +43,11 @@ public class CarBooking {
         return car;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
@@ -60,6 +59,10 @@ public class CarBooking {
         return status;
     }
 
+    public void setStatus(BookingStatus status) {
+        this.status = status;
+    }
+
     public LocalDateTime getBookedAt() {
         return bookedAt;
     }
@@ -67,7 +70,7 @@ public class CarBooking {
     @Override
     public String toString() {
         return "CarBooking{" +
-                "Id=" + Id +
+                "id=" + id +
                 ", user=" + user +
                 ", car=" + car +
                 ", startDate=" + startDate +
