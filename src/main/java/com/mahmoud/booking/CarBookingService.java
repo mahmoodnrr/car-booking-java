@@ -152,7 +152,8 @@ public class CarBookingService {
         return carBookingDao.getAllBookings();
     }
 
-    public static boolean validateDate(LocalDateTime start, LocalDateTime end){
+    private boolean validateDates(LocalDateTime start, LocalDateTime end){
+
         LocalDate past = LocalDate.now().minusDays(1);
 
         LocalDate startDate = start.toLocalDate();

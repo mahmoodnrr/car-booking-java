@@ -7,6 +7,8 @@ import com.mahmoud.car.CarService;
 import com.mahmoud.user.User;
 import com.mahmoud.user.UserService;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Scanner;
@@ -29,17 +31,33 @@ public class CarCliHelper {
         System.out.println("Please select an option");
     }
 
-    public static void option1(UserService userService, CarService carService,
-                               CarBookingService carBookingService, Scanner scanner) {
-
+    public static void option1(UserService userService,CarBookingService carBookingService, Scanner scanner) {
         // List all users
         option7(userService);
 
-       CarBooking carBooking = carBookingService.bookCar(userService, carService, scanner);
+        // Get user ID
+        System.out.println("Please enter user ID");
+        UUID userId = UUID.fromString(scanner.nextLine());
+
+        System.out.println("Please choose a car ID");
+        UUID carId = UUID.fromString(scanner.nextLine());
+
+        // Get start and end dates
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        System.out.println("Enter start date and time (dd-MM-yyyy HH:mm)");
+        LocalDateTime startDate = LocalDateTime.parse(scanner.nextLine(), dateTimeFormatter);
+
+        System.out.println("Enter return date and time (dd-MM-yyyy HH:mm)");
+        LocalDateTime endDate = LocalDateTime.parse(scanner.nextLine(), dateTimeFormatter);
+
+        CarBooking carBooking = carBookingService.bookCar(userId, carId, startDate, endDate);
 
        if(carBooking != null) {
            System.out.println("\nBooking details");
            System.out.println(carBooking);
+       }
+       else {
+           System.out.println("Error: Could not create this booking.");
        }
     }
 
@@ -47,7 +65,14 @@ public class CarCliHelper {
         // Delete Booking
         System.out.println("Please enter booking ID");
 
-        carBookingService.deleteBooking(UUID.fromString(scanner.nextLine()));
+        var result = carBookingService.deleteBooking(UUID.fromString(scanner.nextLine()));
+
+        if (result) {
+            System.out.println("Cancelled booking");
+        } else {
+            System.out.println("Invalid booking ID");
+        }
+
     }
 
     public static void option3(UserService userService, CarBookingService carBookingService, Scanner scanner) {
@@ -74,10 +99,12 @@ public class CarCliHelper {
     public static void option4(CarBookingService carBookingService) {
 
         var bookings =  carBookingService.getAllBookings();
-        if(bookings == null) {
+
+        if(bookings.length == 0) {
             System.out.println("No bookings available");
             return;
         }
+
         System.out.println("Bookings List: \n");
 
         for(CarBooking carBookingList : bookings){
@@ -108,7 +135,6 @@ public class CarCliHelper {
 
     public static void option7(UserService userService){
         System.out.println("Users List: \n");
-
         System.out.println(Arrays.toString(userService.getAllUsers()));
     }
 

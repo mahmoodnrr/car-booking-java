@@ -69,10 +69,9 @@ public class CarBookingDao {
 
     public boolean deleteBooking(UUID bookingId) {
 
-        for (int i = 0; i < carBookings.length; i++) {
-            if(carBookings[i] != null && carBookings[i].getId().equals(bookingId)){
-                carBookings[i] = null;
-                hasEmptySlot = true;
+        for (CarBooking carBooking : carBookings) {
+            if (carBooking != null && carBooking.getId().equals(bookingId)) {
+                carBooking.setStatus(BookingStatus.CANCELLED);
                 return true;
             }
         }
