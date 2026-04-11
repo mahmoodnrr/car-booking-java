@@ -58,4 +58,8 @@ public class Car {
         return isElectric == car.isElectric && Objects.equals(id, car.id) && Objects.equals(regNumber, car.regNumber) && Objects.equals(rentalPricePerDay, car.rentalPricePerDay) && brand == car.brand;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, regNumber, rentalPricePerDay, brand, isElectric);
+    }
 }

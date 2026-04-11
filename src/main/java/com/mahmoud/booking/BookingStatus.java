@@ -2,5 +2,6 @@ package com.mahmoud.booking;
 
 public enum BookingStatus {
     ACTIVE,
-    CANCELLED
+    CANCELLED,
+    COMPLETED
 }

@@ -25,7 +25,6 @@ public class Main {
             try {
                 int userSelectionInput;
 
-                // Store user's selection
                 try {
                     userSelectionInput = scanner.nextInt();
                     scanner.nextLine();
@@ -34,7 +33,6 @@ public class Main {
                     System.out.println("Error: user did not select an option.");
                     break;
                 }
-                // Display Menu
                 switch (userSelectionInput){
                     case 1:
                         CarCliHelper.option1(userService, carBookingService, scanner);

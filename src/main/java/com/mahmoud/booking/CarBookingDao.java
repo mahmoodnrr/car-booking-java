@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class CarBookingDao {
+
     private static CarBooking[] carBookings;
     private int availableSlot;
     private static final int CAPACITY = 2;
@@ -14,11 +15,9 @@ public class CarBookingDao {
     public void saveBooking(CarBooking carBooking) {
 
         if (availableSlot + 1 >= CAPACITY) {
-            // Grow the array
             carBookings = Arrays.copyOf(carBookings, carBookings.length * 2); // double the size
         }
 
-            // Prioritise filling the indexes with null values
             for (int i = 0; i < carBookings.length; i++) {
                 if (carBookings[i] == null){
                     carBookings[i] = carBooking;
