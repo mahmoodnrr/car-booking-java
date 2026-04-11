@@ -57,11 +57,11 @@ public class CarBookingService {
         return true;
     }
 
-    public boolean deleteBooking(UUID bookingId){
+    public boolean deleteBooking(UUID bookingId) {
         return carBookingDao.deleteBooking(bookingId);
     }
 
-    public CarBooking[] getUserBookingById(UUID userId){
+    public CarBooking[] getUserBookingById(UUID userId) {
 
         var size = 0;
 
@@ -74,7 +74,7 @@ public class CarBookingService {
         CarBooking[] userBookings = new CarBooking[size];
 
         for (int i = 0; i < userBookings.length; i++) {
-            if (bookings[i].getUser().getId().equals(userId)){
+            if (bookings[i].getUser().getId().equals(userId)) {
                 userBookings[i] = bookings[i];
             }
         }
@@ -82,11 +82,11 @@ public class CarBookingService {
         return userBookings;
     }
 
-    public CarBooking[] getAllBookings(){
+    public CarBooking[] getAllBookings() {
         return carBookingDao.getAllBookings();
     }
 
-    private boolean validateDates(LocalDateTime start, LocalDateTime end){
+    private boolean validateDates(LocalDateTime start, LocalDateTime end) {
 
         LocalDate past = LocalDate.now().minusDays(1);
 
