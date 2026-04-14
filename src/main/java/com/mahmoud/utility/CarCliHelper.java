@@ -31,18 +31,17 @@ public class CarCliHelper {
         System.out.println("Please select an option");
     }
 
-    public static void option1(UserService userService,CarBookingService carBookingService, Scanner scanner) {
-        // List all users
+    public static void option1(UserService userService, CarService carService, CarBookingService carBookingService, Scanner scanner) {
+
         option7(userService);
 
-        // Get user ID
         System.out.println("Please enter user ID");
         UUID userId = UUID.fromString(scanner.nextLine());
 
+        option5(carService);
         System.out.println("Please choose a car ID");
         UUID carId = UUID.fromString(scanner.nextLine());
 
-        // Get start and end dates
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         System.out.println("Enter start date and time (dd-MM-yyyy HH:mm)");
         LocalDateTime startDate = LocalDateTime.parse(scanner.nextLine(), dateTimeFormatter);

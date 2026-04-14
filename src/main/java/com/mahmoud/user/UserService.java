@@ -5,13 +5,17 @@ import java.util.UUID;
 
 public class UserService {
 
-    private UserDao userDao = new UserDao();
+    private final UserDao userDao;
 
-    public User[] getAllUsers(){
+    public UserService(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public User[] getAllUsers() {
         return userDao.getAllUsers();
     }
 
-    public Optional<User> getUserById(UUID userId){
+    public Optional<User> getUserById(UUID userId) {
 
         var users = getAllUsers();
 

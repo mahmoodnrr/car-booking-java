@@ -1,10 +1,11 @@
 package com.mahmoud.car;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Car {
+public class Car implements Serializable {
 
     private UUID id;
     private String regNumber;
@@ -12,7 +13,7 @@ public class Car {
     private Brand brand;
     private boolean isElectric;
 
-    public Car(UUID id, String regNumber, BigDecimal rentalPricePerDay, Brand brand, boolean isElectric, boolean isAvailable) {
+    public Car(UUID id, String regNumber, BigDecimal rentalPricePerDay, Brand brand, boolean isElectric) {
         this.id = id;
         this.regNumber = regNumber;
         this.rentalPricePerDay = rentalPricePerDay;

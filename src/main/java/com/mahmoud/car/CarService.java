@@ -5,7 +5,11 @@ import java.util.UUID;
 
 public class CarService {
 
-    private CarDao carDao = new CarDao();
+    private final CarDao carDao;
+
+    public CarService(CarDao carDao) {
+        this.carDao = carDao;
+    }
 
     public Car[] getAllCars() {
         return carDao.getAllCars();
@@ -15,8 +19,8 @@ public class CarService {
 
         var cars = getAllCars();
 
-        for(Car car : cars){
-            if(car.getId().equals(carId)) return Optional.of(car);
+        for (Car car : cars) {
+            if (car.getId().equals(carId)) return Optional.of(car);
         }
 
         return Optional.empty();
