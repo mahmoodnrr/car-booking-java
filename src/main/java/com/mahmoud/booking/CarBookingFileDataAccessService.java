@@ -1,8 +1,7 @@
 package com.mahmoud.booking;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class CarBookingFileDataAccessService implements CarBookingDao {
@@ -13,70 +12,79 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
         this.FILE_PATH = new File(fileName);
     }
 
-
     @Override
-    public void saveBooking(CarBooking carBooking) throws IOException, ClassNotFoundException {
+    public void saveBooking(CarBooking carBooking) {
 
-        List<CarBooking> carBookingList = new ArrayList<>();
+        try {
+            CarBooking[] bookings;
 
-        if (FILE_PATH.exists() && FILE_PATH.length() > 0) {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH));
-            carBookingList = (ArrayList<CarBooking>) in.readObject();
-            in.close();
-        }
-
-        carBookingList.add(carBooking);
-
-        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH));
-        out.writeObject(carBookingList);
-        out.close();
-    }
-
-    @Override
-    public CarBooking[] getAllBookings() throws IOException, ClassNotFoundException {
-
-        if (FILE_PATH.exists() && FILE_PATH.length() > 0) {
-
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH));
-            List<CarBooking> carBookingList = (ArrayList<CarBooking>) in.readObject();
-            in.close();
-
-            CarBooking[] bookings = new CarBooking[carBookingList.size()];
-
-            for (int i = 0; i < carBookingList.size(); i++) {
-                bookings[i] = carBookingList.get(i);
-            }
-
-            return bookings;
-        }
-
-        return new CarBooking[]{};
-    }
-
-    @Override
-    public boolean deleteBooking(UUID bookingId) throws IOException, ClassNotFoundException {
-
-        if (FILE_PATH.exists() && FILE_PATH.length() > 0) {
-
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH));
-            List<CarBooking> carBookingList = (ArrayList<CarBooking>) in.readObject();
-            in.close();
-
-            List<CarBooking> updatedCarBookingList = new ArrayList<>();
-            for (CarBooking carBooking : carBookingList) {
-                if (carBooking.getId().equals(bookingId)) {
-                    carBooking.setStatus(BookingStatus.CANCELLED);
+            if (FILE_PATH.exists() && FILE_PATH.length() > 0) {
+                try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+                    bookings = (CarBooking[]) in.readObject();
                 }
-                updatedCarBookingList.add(carBooking);
+
+                bookings = Arrays.copyOf(bookings, bookings.length + 1);
+                bookings[bookings.length - 1] = carBooking;
+            } else {
+                bookings = new CarBooking[]{carBooking};
             }
 
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH));
-            out.writeObject(updatedCarBookingList);
-            out.close();
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
+                out.writeObject(bookings);
+            }
 
-            return true;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
+    }
 
-        return false;
+    @Override
+    public CarBooking[] getAllBookings() {
+
+        try {
+            if (FILE_PATH.exists() && FILE_PATH.length() > 0) {
+                ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH));
+                CarBooking[] bookings = (CarBooking[]) in.readObject();
+                in.close();
+
+                return bookings;
+            }
+
+            return new CarBooking[]{};
+
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean deleteBooking(UUID bookingId) {
+
+        try {
+            if (FILE_PATH.exists() && FILE_PATH.length() > 0) {
+                ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH));
+                CarBooking[] bookings = (CarBooking[]) in.readObject();
+                in.close();
+
+                CarBooking[] updatedBookings = new CarBooking[bookings.length];
+
+                for (int i = 0; i < bookings.length; i++) {
+                    if (bookings[i].getId().equals(bookingId)) {
+                        bookings[i].setStatus(BookingStatus.CANCELLED);
+                    }
+
+                    updatedBookings[i] = bookings[i];
+                }
+
+                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH));
+                out.writeObject(updatedBookings);
+                out.close();
+
+                return true;
+            }
+            return false;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

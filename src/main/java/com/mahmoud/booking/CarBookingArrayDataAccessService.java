@@ -17,7 +17,7 @@ public class CarBookingArrayDataAccessService implements CarBookingDao {
     public void saveBooking(CarBooking carBooking) {
 
         if (availableSlot + 1 >= CAPACITY) {
-            carBookings = Arrays.copyOf(carBookings, carBookings.length * 2); // double the size
+            carBookings = Arrays.copyOf(carBookings, carBookings.length * 2);
         }
 
         for (int i = 0; i < carBookings.length; i++) {

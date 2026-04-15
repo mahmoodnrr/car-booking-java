@@ -5,7 +5,6 @@ import com.mahmoud.car.CarService;
 import com.mahmoud.user.User;
 import com.mahmoud.user.UserService;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,89 +40,64 @@ public class CarBookingService {
 
         BigDecimal price = new BigDecimal(numberOfDays).multiply(car.getRentalPricePerDay());
 
-
         CarBooking carBooking = new CarBooking(UUID.randomUUID(), user, car, startDate, endDate, price, BookingStatus.ACTIVE, LocalDateTime.now());
 
-        try {
-            carBookingDao.saveBooking(carBooking);
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        carBookingDao.saveBooking(carBooking);
 
         return carBooking;
     }
 
     private boolean isCarAvailable(UUID carId, LocalDateTime startDate) {
 
-        try {
-            CarBooking[] bookings = carBookingDao.getAllBookings();
+        CarBooking[] bookings = carBookingDao.getAllBookings();
 
-            for (CarBooking carBooking : bookings) {
-                if (carBooking.getCar().getId().equals(carId)) {
-                    if ((carBooking.getEndDate().isAfter(startDate)) ||
-                            ((carBooking.getEndDate().isEqual(startDate)) ||
-                                    !carBooking.getStatus().equals(BookingStatus.CANCELLED))) {
-                        return false;
-                    }
+        for (CarBooking carBooking : bookings) {
+            if (carBooking.getCar().getId().equals(carId)) {
+                if ((carBooking.getEndDate().isAfter(startDate)) ||
+                        ((carBooking.getEndDate().isEqual(startDate)))) {
+                    return false;
                 }
             }
-
-            return true;
-
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
+
+        return true;
     }
 
     public boolean deleteBooking(UUID bookingId) {
-        try {
 
-            CarBooking[] bookings = carBookingDao.getAllBookings();
+        CarBooking[] bookings = carBookingDao.getAllBookings();
 
-            for (CarBooking carBooking : bookings) {
-                if (carBooking.getId().equals(bookingId))
-                    return carBookingDao.deleteBooking(bookingId);
-            }
-
-            return false;
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        for (CarBooking carBooking : bookings) {
+            if (carBooking.getId().equals(bookingId))
+                return carBookingDao.deleteBooking(bookingId);
         }
+
+        return false;
     }
 
     public CarBooking[] getUserBookingById(UUID userId) {
 
         var size = 0;
 
-        try {
+        CarBooking[] bookings = carBookingDao.getAllBookings();
 
-            CarBooking[] bookings = carBookingDao.getAllBookings();
-
-            for (CarBooking carBooking : bookings) {
-                if (carBooking.getUser().getId().equals(userId)) size++;
-            }
-
-            CarBooking[] userBookings = new CarBooking[size];
-
-            for (int i = 0; i < userBookings.length; i++) {
-                if (bookings[i].getUser().getId().equals(userId)) {
-                    userBookings[i] = bookings[i];
-                }
-            }
-
-            return userBookings;
-
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        for (CarBooking carBooking : bookings) {
+            if (carBooking.getUser().getId().equals(userId)) size++;
         }
+
+        CarBooking[] userBookings = new CarBooking[size];
+
+        for (int i = 0; i < userBookings.length; i++) {
+            if (bookings[i].getUser().getId().equals(userId)) {
+                userBookings[i] = bookings[i];
+            }
+        }
+
+        return userBookings;
     }
 
     public CarBooking[] getAllBookings() {
-        try {
-            return carBookingDao.getAllBookings();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        return carBookingDao.getAllBookings();
     }
 
     private boolean validateDates(LocalDateTime start, LocalDateTime end) {
