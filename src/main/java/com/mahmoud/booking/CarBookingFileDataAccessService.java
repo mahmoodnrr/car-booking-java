@@ -43,9 +43,10 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
 
         try {
             if (FILE_PATH.exists() && FILE_PATH.length() > 0) {
-                ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH));
-                CarBooking[] bookings = (CarBooking[]) in.readObject();
-                in.close();
+                CarBooking[] bookings;
+                try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+                    bookings = (CarBooking[]) in.readObject();
+                }
 
                 return bookings;
             }
@@ -62,9 +63,10 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
 
         try {
             if (FILE_PATH.exists() && FILE_PATH.length() > 0) {
-                ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH));
-                CarBooking[] bookings = (CarBooking[]) in.readObject();
-                in.close();
+                CarBooking[] bookings;
+                try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
+                    bookings = (CarBooking[]) in.readObject();
+                }
 
                 CarBooking[] updatedBookings = new CarBooking[bookings.length];
 
@@ -76,12 +78,13 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
                     updatedBookings[i] = bookings[i];
                 }
 
-                ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH));
-                out.writeObject(updatedBookings);
-                out.close();
+                try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
+                    out.writeObject(updatedBookings);
+                }
 
                 return true;
             }
+
             return false;
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
