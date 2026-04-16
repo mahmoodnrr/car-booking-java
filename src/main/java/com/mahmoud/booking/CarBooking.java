@@ -3,12 +3,13 @@ package com.mahmoud.booking;
 import com.mahmoud.car.Car;
 import com.mahmoud.user.User;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CarBooking {
+public class CarBooking implements Serializable {
 
     private UUID id;
     private User user;
@@ -19,7 +20,8 @@ public class CarBooking {
     private BookingStatus status;
     private LocalDateTime bookedAt;
 
-    public CarBooking(){}
+    public CarBooking() {
+    }
 
     public CarBooking(UUID id, User user, Car car, LocalDateTime startDate, LocalDateTime endDate, BigDecimal price, BookingStatus status, LocalDateTime bookedAt) {
         this.id = id;

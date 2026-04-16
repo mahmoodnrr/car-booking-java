@@ -624,7 +624,7 @@ public class CarBookingService {
 public static void main(String[] args) {
     // Swap booking implementation here
     CarBookingDao carBookingDao = new CarBookingFileDataAccessService("bookings.dat");
-    // CarBookingDao carBookingDao = new CarBookingArrayDataAccessService();
+    // CarBookingArrayDataAccessService carBookingDao = new CarBookingArrayDataAccessService();
 
     CarDao carDao = new CarArrayDataAccessService();
     CarService carService = new CarService(carDao);
@@ -887,7 +887,7 @@ These can be swapped in via dependency injection in `com.mahmoud.Main.java`:
 
 ```java
 UserDao userDao = new UserFakerDataAccessService();
-// UserDao userDao = new UserArrayDataAccessService();
+// UserArrayDataAccessService userDao = new UserArrayDataAccessService();
 ```
 
 #### Part C - Unit Tests

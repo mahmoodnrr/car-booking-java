@@ -13,9 +13,15 @@ import java.util.UUID;
 
 public class CarBookingService {
 
-    private static final CarBookingDao carBookingDao = new CarBookingDao();
-    private static final UserService userService = new UserService();
-    private static final CarService carService = new CarService();
+    private final CarBookingDao carBookingDao;
+    private final UserService userService;
+    private final CarService carService;
+
+    public CarBookingService(CarBookingDao carBookingDao, CarService carService, UserService userService) {
+        this.carBookingDao = carBookingDao;
+        this.carService = carService;
+        this.userService = userService;
+    }
 
     public CarBooking bookCar(UUID userId, UUID carId, LocalDateTime startDate, LocalDateTime endDate) {
 
@@ -43,29 +49,37 @@ public class CarBookingService {
 
     private boolean isCarAvailable(UUID carId, LocalDateTime startDate) {
 
-        var bookings = carBookingDao.getAllBookings();
+        CarBooking[] bookings = carBookingDao.getAllBookings();
 
         for (CarBooking carBooking : bookings) {
             if (carBooking.getCar().getId().equals(carId)) {
                 if ((carBooking.getEndDate().isAfter(startDate)) ||
-                        ((carBooking.getEndDate().isEqual(startDate)) ||
-                                !carBooking.getStatus().equals(BookingStatus.CANCELLED))) {
+                        ((carBooking.getEndDate().isEqual(startDate)))) {
                     return false;
                 }
             }
         }
+
         return true;
     }
 
     public boolean deleteBooking(UUID bookingId) {
-        return carBookingDao.deleteBooking(bookingId);
+
+        CarBooking[] bookings = carBookingDao.getAllBookings();
+
+        for (CarBooking carBooking : bookings) {
+            if (carBooking.getId().equals(bookingId))
+                return carBookingDao.deleteBooking(bookingId);
+        }
+
+        return false;
     }
 
     public CarBooking[] getUserBookingById(UUID userId) {
 
         var size = 0;
 
-        var bookings = carBookingDao.getAllBookings();
+        CarBooking[] bookings = carBookingDao.getAllBookings();
 
         for (CarBooking carBooking : bookings) {
             if (carBooking.getUser().getId().equals(userId)) size++;
