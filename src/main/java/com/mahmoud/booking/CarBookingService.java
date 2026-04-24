@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CarBookingService {
@@ -49,7 +51,7 @@ public class CarBookingService {
 
     private boolean isCarAvailable(UUID carId, LocalDateTime startDate) {
 
-        CarBooking[] bookings = carBookingDao.getAllBookings();
+        List<CarBooking> bookings = carBookingDao.getAllBookings();
 
         for (CarBooking carBooking : bookings) {
             if (carBooking.getCar().getId().equals(carId)) {
@@ -65,7 +67,7 @@ public class CarBookingService {
 
     public boolean deleteBooking(UUID bookingId) {
 
-        CarBooking[] bookings = carBookingDao.getAllBookings();
+        List<CarBooking> bookings = carBookingDao.getAllBookings();
 
         for (CarBooking carBooking : bookings) {
             if (carBooking.getId().equals(bookingId))
@@ -75,28 +77,21 @@ public class CarBookingService {
         return false;
     }
 
-    public CarBooking[] getUserBookingById(UUID userId) {
+    public List<CarBooking> getUserBookingsById(UUID userId) {
 
-        var size = 0;
+        List<CarBooking> bookings = carBookingDao.getAllBookings();
+        List<CarBooking> userBookings = new ArrayList<>();
 
-        CarBooking[] bookings = carBookingDao.getAllBookings();
-
-        for (CarBooking carBooking : bookings) {
-            if (carBooking.getUser().getId().equals(userId)) size++;
-        }
-
-        CarBooking[] userBookings = new CarBooking[size];
-
-        for (int i = 0; i < userBookings.length; i++) {
-            if (bookings[i].getUser().getId().equals(userId)) {
-                userBookings[i] = bookings[i];
+        for (int i = 0; i < bookings.size(); i++) {
+            if (bookings.get(i).getUser().getId().equals(userId)) {
+                userBookings.add(bookings.get(i));
             }
         }
 
         return userBookings;
     }
 
-    public CarBooking[] getAllBookings() {
+    public List<CarBooking> getAllBookings() {
         return carBookingDao.getAllBookings();
     }
 

@@ -1,7 +1,8 @@
 package com.mahmoud.booking;
 
 import java.io.*;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CarBookingFileDataAccessService implements CarBookingDao {
@@ -16,17 +17,17 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
     public void saveBooking(CarBooking carBooking) {
 
         try {
-            CarBooking[] bookings;
+            List<CarBooking> bookings;
 
             if (FILE_PATH.exists() && FILE_PATH.length() > 0) {
                 try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
-                    bookings = (CarBooking[]) in.readObject();
+                    bookings = (List<CarBooking>) in.readObject();
                 }
 
-                bookings = Arrays.copyOf(bookings, bookings.length + 1);
-                bookings[bookings.length - 1] = carBooking;
+                bookings.add(carBooking);
             } else {
-                bookings = new CarBooking[]{carBooking};
+                bookings = new ArrayList<>();
+                bookings.add(carBooking);
             }
 
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
@@ -39,19 +40,19 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
     }
 
     @Override
-    public CarBooking[] getAllBookings() {
+    public List<CarBooking> getAllBookings() {
 
         try {
             if (FILE_PATH.exists() && FILE_PATH.length() > 0) {
-                CarBooking[] bookings;
+                List<CarBooking> bookings;
                 try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
-                    bookings = (CarBooking[]) in.readObject();
+                    bookings = (List<CarBooking>) in.readObject();
                 }
 
                 return bookings;
             }
 
-            return new CarBooking[]{};
+            return new ArrayList<>(){};
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -63,19 +64,19 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
 
         try {
             if (FILE_PATH.exists() && FILE_PATH.length() > 0) {
-                CarBooking[] bookings;
+                List<CarBooking> bookings;
                 try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
-                    bookings = (CarBooking[]) in.readObject();
+                    bookings = (List<CarBooking>) in.readObject();
                 }
 
-                CarBooking[] updatedBookings = new CarBooking[bookings.length];
+                List<CarBooking> updatedBookings = new ArrayList<>();
 
-                for (int i = 0; i < bookings.length; i++) {
-                    if (bookings[i].getId().equals(bookingId)) {
-                        bookings[i].setStatus(BookingStatus.CANCELLED);
+                for (int i = 0; i < bookings.size(); i++) {
+                    if (bookings.get(i).getId().equals(bookingId)) {
+                        bookings.get(i).setStatus(BookingStatus.CANCELLED);
                     }
 
-                    updatedBookings[i] = bookings[i];
+                    updatedBookings = bookings;
                 }
 
                 try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
