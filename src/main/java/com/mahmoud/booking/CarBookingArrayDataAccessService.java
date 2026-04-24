@@ -1,55 +1,25 @@
 package com.mahmoud.booking;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CarBookingArrayDataAccessService implements CarBookingDao {
 
-    private static CarBooking[] carBookings;
-    private int availableSlot;
-    private static final int CAPACITY = 2;
+    private static List<CarBooking> carBookings;
 
     static {
-        carBookings = new CarBooking[CAPACITY];
+        carBookings = new ArrayList<>();
     }
 
     @Override
     public void saveBooking(CarBooking carBooking) {
-
-        if (availableSlot + 1 >= CAPACITY) {
-            carBookings = Arrays.copyOf(carBookings, carBookings.length * 2);
-        }
-
-        for (int i = 0; i < carBookings.length; i++) {
-            if (carBookings[i] == null) {
-                carBookings[i] = carBooking;
-                break;
-            }
-        }
+        carBookings.add(carBooking);
     }
 
     @Override
-    public CarBooking[] getAllBookings() {
-
-        int size = 0;
-
-        for (CarBooking carBooking : carBookings) {
-            if (carBooking != null) size++;
-        }
-
-        if (size == 0) return new CarBooking[]{};
-
-        CarBooking[] bookings = new CarBooking[size];
-
-        int index = 0;
-
-        for (CarBooking carBooking : carBookings) {
-            if (carBooking != null) {
-                bookings[index++] = carBooking;
-            }
-        }
-
-        return bookings;
+    public List<CarBooking> getAllBookings() {
+        return carBookings;
     }
 
     @Override
