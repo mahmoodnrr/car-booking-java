@@ -71,13 +71,12 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
 
                 List<CarBooking> updatedBookings = new ArrayList<>();
 
-                for (int i = 0; i < bookings.size(); i++) {
-                    if (bookings.get(i).getId().equals(bookingId)) {
-                        bookings.get(i).setStatus(BookingStatus.CANCELLED);
+                for (CarBooking booking : bookings) {
+                    if (booking.getId().equals(bookingId)) {
+                        booking.setStatus(BookingStatus.CANCELLED);
                     }
-
-                    updatedBookings = bookings;
                 }
+                    updatedBookings = bookings;
 
                 try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
                     out.writeObject(updatedBookings);

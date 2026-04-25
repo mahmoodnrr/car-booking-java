@@ -31,8 +31,8 @@ public class CarBookingService {
 
         Car car = carService.getCarById(carId).orElseThrow(() -> new IllegalArgumentException("Car not found: " + carId));
 
-        if (!validateDates(startDate, endDate)) throw new IllegalArgumentException("Start date cannot be in the past " +
-                "and end date must be after start date.");
+        if (!validateDates(startDate, endDate))
+            throw new IllegalArgumentException("Start date cannot be in the past " + "and end date must be after start date.");
 
         if (!isCarAvailable(car.getId(), startDate)) {
             throw new IllegalStateException("Car " + carId + " is not available on the given dates.");
@@ -56,7 +56,8 @@ public class CarBookingService {
         for (CarBooking carBooking : bookings) {
             if (carBooking.getCar().getId().equals(carId)) {
                 if ((carBooking.getEndDate().isAfter(startDate)) ||
-                        ((carBooking.getEndDate().isEqual(startDate)))) {
+                        ((carBooking.getEndDate().isEqual(startDate))) ||
+                        !carBooking.getStatus().equals(BookingStatus.CANCELLED)) {
                     return false;
                 }
             }
@@ -82,9 +83,9 @@ public class CarBookingService {
         List<CarBooking> bookings = carBookingDao.getAllBookings();
         List<CarBooking> userBookings = new ArrayList<>();
 
-        for (int i = 0; i < bookings.size(); i++) {
-            if (bookings.get(i).getUser().getId().equals(userId)) {
-                userBookings.add(bookings.get(i));
+        for (CarBooking booking : bookings) {
+            if (booking.getUser().getId().equals(userId)) {
+                userBookings.add(booking);
             }
         }
 
