@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CarBookingService {
@@ -29,8 +31,8 @@ public class CarBookingService {
 
         Car car = carService.getCarById(carId).orElseThrow(() -> new IllegalArgumentException("Car not found: " + carId));
 
-        if (!validateDates(startDate, endDate)) throw new IllegalArgumentException("Start date cannot be in the past " +
-                "and end date must be after start date.");
+        if (!validateDates(startDate, endDate))
+            throw new IllegalArgumentException("Start date cannot be in the past " + "and end date must be after start date.");
 
         if (!isCarAvailable(car.getId(), startDate)) {
             throw new IllegalStateException("Car " + carId + " is not available on the given dates.");
@@ -49,15 +51,15 @@ public class CarBookingService {
 
     private boolean isCarAvailable(UUID carId, LocalDateTime startDate) {
 
-        CarBooking[] bookings = carBookingDao.getAllBookings();
+        List<CarBooking> bookings = carBookingDao.getAllBookings();
 
         for (CarBooking carBooking : bookings) {
-            if (carBooking.getCar().getId().equals(carId)) {
-                if ((carBooking.getEndDate().isAfter(startDate)) ||
-                        ((carBooking.getEndDate().isEqual(startDate)))) {
+            if (carBooking.getCar().getId().equals(carId) &&
+                (carBooking.getEndDate().isAfter(startDate) ||
+                        (carBooking.getEndDate().isEqual(startDate))) ||
+                        !carBooking.getStatus().equals(BookingStatus.CANCELLED)) {
                     return false;
                 }
-            }
         }
 
         return true;
@@ -65,7 +67,7 @@ public class CarBookingService {
 
     public boolean deleteBooking(UUID bookingId) {
 
-        CarBooking[] bookings = carBookingDao.getAllBookings();
+        List<CarBooking> bookings = carBookingDao.getAllBookings();
 
         for (CarBooking carBooking : bookings) {
             if (carBooking.getId().equals(bookingId))
@@ -75,28 +77,21 @@ public class CarBookingService {
         return false;
     }
 
-    public CarBooking[] getUserBookingById(UUID userId) {
+    public List<CarBooking> getUserBookingsById(UUID userId) {
 
-        var size = 0;
+        List<CarBooking> bookings = carBookingDao.getAllBookings();
+        List<CarBooking> userBookings = new ArrayList<>();
 
-        CarBooking[] bookings = carBookingDao.getAllBookings();
-
-        for (CarBooking carBooking : bookings) {
-            if (carBooking.getUser().getId().equals(userId)) size++;
-        }
-
-        CarBooking[] userBookings = new CarBooking[size];
-
-        for (int i = 0; i < userBookings.length; i++) {
-            if (bookings[i].getUser().getId().equals(userId)) {
-                userBookings[i] = bookings[i];
+        for (CarBooking booking : bookings) {
+            if (booking.getUser().getId().equals(userId)) {
+                userBookings.add(booking);
             }
         }
 
         return userBookings;
     }
 
-    public CarBooking[] getAllBookings() {
+    public List<CarBooking> getAllBookings() {
         return carBookingDao.getAllBookings();
     }
 
