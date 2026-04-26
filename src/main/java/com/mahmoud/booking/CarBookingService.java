@@ -54,13 +54,12 @@ public class CarBookingService {
         List<CarBooking> bookings = carBookingDao.getAllBookings();
 
         for (CarBooking carBooking : bookings) {
-            if (carBooking.getCar().getId().equals(carId)) {
-                if ((carBooking.getEndDate().isAfter(startDate)) ||
-                        ((carBooking.getEndDate().isEqual(startDate))) ||
+            if (carBooking.getCar().getId().equals(carId) &&
+                (carBooking.getEndDate().isAfter(startDate) ||
+                        (carBooking.getEndDate().isEqual(startDate))) ||
                         !carBooking.getStatus().equals(BookingStatus.CANCELLED)) {
                     return false;
                 }
-            }
         }
 
         return true;
