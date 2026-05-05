@@ -25,12 +25,15 @@ public class CarBookingArrayDataAccessService implements CarBookingDao {
     @Override
     public boolean deleteBooking(UUID bookingId) {
 
-        for (CarBooking carBooking : carBookings) {
-            if (carBooking != null && carBooking.getId().equals(bookingId)) {
-                carBooking.setStatus(BookingStatus.CANCELLED);
-                return true;
-            }
-        }
-        return false;
+
+        return carBookings
+                .stream()
+                .filter(carBooking -> carBooking.getId().equals(bookingId))
+                .findFirst()
+                .map(car -> {
+                    car.setStatus(BookingStatus.CANCELLED);
+                    return true;
+                })
+                .orElse(false);
     }
 }

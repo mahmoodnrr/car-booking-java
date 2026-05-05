@@ -9,7 +9,10 @@ import com.mahmoud.user.UserService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
+import java.util.UUID;
 
 public class CarCliHelper {
 
@@ -50,27 +53,26 @@ public class CarCliHelper {
         if (carBooking != null) {
             System.out.println("\nBooking details");
             System.out.println(carBooking);
-        } else {
-            System.out.println("Error: Could not create this booking.");
+            return;
         }
+
+        System.out.println("Error: Could not create this booking.");
     }
 
     public static void option2(CarBookingService carBookingService, Scanner scanner) {
-        // Delete Booking
         System.out.println("Please enter booking ID");
 
         var result = carBookingService.deleteBooking(UUID.fromString(scanner.nextLine()));
 
         if (result) {
             System.out.println("Cancelled booking");
-        } else {
-            System.out.println("Invalid booking ID");
+            return;
         }
 
+        System.out.println("Invalid booking ID");
     }
 
     public static void option3(UserService userService, CarBookingService carBookingService, Scanner scanner) {
-        // Validate User Id
         Optional<User> user;
 
         System.out.println("Please enter user ID");
@@ -88,52 +90,36 @@ public class CarCliHelper {
         }
 
         System.out.println("Bookings for " + user.get().getName() + ":");
-
-        for (CarBooking carBooking : carBookings)  System.out.println(carBooking);
+        carBookings.forEach(System.out::println);
     }
 
     public static void option4(CarBookingService carBookingService) {
 
-        var bookings = carBookingService.getAllBookings();
-
-        if (bookings.isEmpty()) {
+        if (carBookingService.getAllBookings().isEmpty()) {
             System.out.println("No bookings available");
             return;
         }
 
         System.out.println("Bookings List: \n");
-
-        for (CarBooking carBookingList : bookings) {
-            System.out.println(carBookingList.toString());
-            System.out.println();
-        }
+        carBookingService.getAllBookings().forEach(System.out::println);
     }
 
     public static void option5(CarService carService) {
         System.out.println("View all available cars:\n");
-
-        for (Car car : carService.getAllCars()) {
-            System.out.println(car);
-            System.out.println();
-        }
+        carService.getAllCars().forEach(System.out::println);
     }
 
     public static void option6(CarService carService) {
         System.out.println("View all electric cars:\n");
-
-        for (Car car : carService.getAllCars()) {
-            if (car.isElectric()) {
-                System.out.println(car);
-            }
-        }
+        carService.getAllCars()
+                .stream()
+                .filter(Car::isElectric)
+                .forEach(System.out::println);
     }
 
     public static void option7(UserService userService) {
-        var users = userService.getAllUsers();
-
-        System.out.println("Users List: \n");
-
-        for (User user : users) System.out.println(user);
+        System.out.println("Users: \n");
+        userService.getAllUsers().forEach(System.out::println);
     }
 
     public static void option8(Scanner scanner) {

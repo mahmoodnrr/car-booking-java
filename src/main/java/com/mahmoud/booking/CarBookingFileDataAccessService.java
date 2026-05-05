@@ -52,7 +52,8 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
                 return bookings;
             }
 
-            return new ArrayList<>(){};
+            return new ArrayList<>() {
+            };
 
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
@@ -69,14 +70,14 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
                     bookings = (List<CarBooking>) in.readObject();
                 }
 
-                List<CarBooking> updatedBookings = new ArrayList<>();
-
-                for (CarBooking booking : bookings) {
-                    if (booking.getId().equals(bookingId)) {
-                        booking.setStatus(BookingStatus.CANCELLED);
-                    }
-                }
-                    updatedBookings = bookings;
+                List<CarBooking> updatedBookings = bookings.stream()
+                        .map(car -> {
+                                if(car.getId().equals(bookingId)) {
+                                    car.setStatus(BookingStatus.CANCELLED);
+                                }
+                                return car;
+                        }
+                        ).toList();
 
                 try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
                     out.writeObject(updatedBookings);
