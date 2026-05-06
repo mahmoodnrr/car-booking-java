@@ -2,6 +2,7 @@ package com.mahmoud.booking;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class CarBookingArrayDataAccessService implements CarBookingDao {
@@ -25,15 +26,13 @@ public class CarBookingArrayDataAccessService implements CarBookingDao {
     @Override
     public boolean deleteBooking(UUID bookingId) {
 
-
-        return carBookings
-                .stream()
+        CarBooking car = carBookings.stream()
                 .filter(carBooking -> carBooking.getId().equals(bookingId))
                 .findFirst()
-                .map(car -> {
-                    car.setStatus(BookingStatus.CANCELLED);
-                    return true;
-                })
-                .orElse(false);
+                .orElseThrow(() -> new IllegalArgumentException("Booking ID " + bookingId + " was not found"));
+
+        car.setStatus(BookingStatus.CANCELLED);
+
+        return true;
     }
 }
