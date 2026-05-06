@@ -50,27 +50,23 @@ public class CarBookingService {
 
     private boolean isCarAvailable(UUID carId, LocalDateTime startDate) {
 
-
-        return carBookingDao.getAllBookings().stream()
-                .noneMatch(carBooking ->
-                        carBooking.getCar().getId().equals(carId)
-                                && !carBooking.getStatus().equals(BookingStatus.CANCELLED)
-                                && !carBooking.getEndDate().isBefore(startDate)
+     return carBookingDao.getAllBookings().stream()
+                .allMatch(carBooking ->
+                        (!carBooking.getCar().getId().equals(carId) || !carBooking.getStatus().equals(BookingStatus.ACTIVE))
+                        || !carBooking.getEndDate().isAfter(startDate)
                 );
     }
 
     public boolean deleteBooking(UUID bookingId) {
 
-        return carBookingDao.getAllBookings()
-                .stream()
-                .filter(carBooking ->
-                        carBooking.getId().equals(bookingId)
-                )
-                .map(car ->
-                        carBookingDao.deleteBooking(car.getId())
-                )
-                .findFirst()
-                .orElse(false);
+        List<CarBooking> bookings = carBookingDao.getAllBookings();
+
+        for (CarBooking carBooking : bookings) {
+            if (carBooking.getId().equals(bookingId))
+                return carBookingDao.deleteBooking(bookingId);
+        }
+
+        return false;
     }
 
     public List<CarBooking> getUserBookingsById(UUID userId) {
