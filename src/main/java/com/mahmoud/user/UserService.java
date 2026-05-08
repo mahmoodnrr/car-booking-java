@@ -17,13 +17,9 @@ public class UserService {
     }
 
     public Optional<User> getUserById(UUID userId) {
-
-        var users = getAllUsers();
-
-        for (User user : users) {
-            if (user.getId().equals(userId)) return Optional.of(user);
-        }
-
-        return Optional.empty();
+        return getAllUsers()
+                .stream()
+                .filter(user -> user.getId().equals(userId))
+                .findFirst();
     }
 }

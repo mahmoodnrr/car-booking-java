@@ -17,13 +17,9 @@ public class CarService {
     }
 
     public Optional<Car> getCarById(UUID carId) {
-
-        var cars = getAllCars();
-
-        for (Car car : cars) {
-            if (car.getId().equals(carId)) return Optional.of(car);
-        }
-
-        return Optional.empty();
+        return getAllCars()
+                .stream()
+                .filter(car -> car.getId().equals(carId))
+                .findFirst();
     }
 }

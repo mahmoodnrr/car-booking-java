@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +34,7 @@ public class CarBookingService {
             throw new IllegalArgumentException("Start date cannot be in the past " + "and end date must be after start date.");
 
         if (!isCarAvailable(car.getId(), startDate)) {
-            throw new IllegalStateException("Car " + carId + " is not available on the given dates.");
+            throw new IllegalStateException("Car " + car.getId() + " is not available on the given dates.");
         }
 
         var numberOfDays = ChronoUnit.DAYS.between(startDate, endDate);
@@ -51,18 +50,11 @@ public class CarBookingService {
 
     private boolean isCarAvailable(UUID carId, LocalDateTime startDate) {
 
-        List<CarBooking> bookings = carBookingDao.getAllBookings();
-
-        for (CarBooking carBooking : bookings) {
-            if (carBooking.getCar().getId().equals(carId) &&
-                (carBooking.getEndDate().isAfter(startDate) ||
-                        (carBooking.getEndDate().isEqual(startDate))) ||
-                        !carBooking.getStatus().equals(BookingStatus.CANCELLED)) {
-                    return false;
-                }
-        }
-
-        return true;
+     return carBookingDao.getAllBookings().stream()
+                .allMatch(carBooking ->
+                        (!carBooking.getCar().getId().equals(carId) || !carBooking.getStatus().equals(BookingStatus.ACTIVE))
+                        || !carBooking.getEndDate().isAfter(startDate)
+                );
     }
 
     public boolean deleteBooking(UUID bookingId) {
@@ -78,17 +70,12 @@ public class CarBookingService {
     }
 
     public List<CarBooking> getUserBookingsById(UUID userId) {
-
-        List<CarBooking> bookings = carBookingDao.getAllBookings();
-        List<CarBooking> userBookings = new ArrayList<>();
-
-        for (CarBooking booking : bookings) {
-            if (booking.getUser().getId().equals(userId)) {
-                userBookings.add(booking);
-            }
-        }
-
-        return userBookings;
+        return carBookingDao.getAllBookings()
+                .stream()
+                .filter(booking ->
+                        booking.getUser().getId().equals(userId)
+                )
+                .toList();
     }
 
     public List<CarBooking> getAllBookings() {
