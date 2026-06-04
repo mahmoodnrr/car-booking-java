@@ -9,8 +9,8 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
 
     private final File FILE_PATH;
 
-    public CarBookingFileDataAccessService(String fileName) {
-        this.FILE_PATH = new File(fileName);
+    public CarBookingFileDataAccessService() {
+        this.FILE_PATH = new File(getClass().getClassLoader().getResource("carbookings.dat").getPath());
     }
 
     @Override
@@ -70,10 +70,10 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
                     bookings = (List<CarBooking>) in.readObject();
                 }
 
-            bookings.stream()
-                    .filter(booking -> booking.getId().equals(bookingId))
-                    .findFirst()
-                    .ifPresent(carBooking -> carBooking.setStatus(BookingStatus.CANCELLED));
+                bookings.stream()
+                        .filter(booking -> booking.getId().equals(bookingId))
+                        .findFirst()
+                        .ifPresent(carBooking -> carBooking.setStatus(BookingStatus.CANCELLED));
 
                 try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
                     out.writeObject(bookings);
