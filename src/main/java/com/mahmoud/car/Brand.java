@@ -5,9 +5,9 @@ public enum Brand {
     MERCEDES,
     BMW,
     TOYOTA,
-    Volkswagen,
-    Honda,
-    Nissan,
-    Hyundai,
-    Kia
+    VOLKSWAGEN,
+    HONDA,
+    NISSAN,
+    HYUNDAI,
+    KIA
 }

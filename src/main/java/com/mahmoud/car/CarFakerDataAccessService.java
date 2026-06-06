@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class CarFakerDataAccessService implements CarDao {
+    private final Faker faker = new Faker();
 
     @Override
     public List<Car> getAllCars() {
-        Faker faker = new Faker();
 
         List<Car> cars = new ArrayList<>();
 

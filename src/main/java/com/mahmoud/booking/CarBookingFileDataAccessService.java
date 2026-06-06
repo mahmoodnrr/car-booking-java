@@ -9,8 +9,8 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
 
     private final File FILE_PATH;
 
-    public CarBookingFileDataAccessService() {
-        this.FILE_PATH = new File(getClass().getClassLoader().getResource("carbookings.dat").getPath());
+    public CarBookingFileDataAccessService(String fileName) {
+        this.FILE_PATH = new File(fileName);
     }
 
     @Override

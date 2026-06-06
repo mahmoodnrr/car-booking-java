@@ -23,7 +23,7 @@ public class Main {
 
         CarService carService = new CarService(carDao);
         UserService userService = new UserService(userDao);
-        CarBookingDao carBookingDao = new CarBookingFileDataAccessService();
+        CarBookingDao carBookingDao = new CarBookingFileDataAccessService("src/main/resources/carbookings.dat");
 
         CarBookingService carBookingService = new CarBookingService(carBookingDao, carService, userService);
 

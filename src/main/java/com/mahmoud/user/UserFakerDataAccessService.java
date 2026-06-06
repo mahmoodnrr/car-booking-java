@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class UserFakerDataAccessService implements UserDao {
+
+    private final Faker faker = new Faker();
+
     @Override
     public List<User> getAllUsers() {
-        Faker faker = new Faker();
 
         List<User> users = new ArrayList<>();
 
