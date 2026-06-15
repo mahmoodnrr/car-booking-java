@@ -60,8 +60,7 @@ public class CarBookingFileDataAccessService implements CarBookingDao {
         }
     }
 
-    @Override
-    public boolean deleteBooking(UUID bookingId) {
+    public boolean cancelBooking(UUID bookingId) {
 
         try {
             if (FILE_PATH.exists() && FILE_PATH.length() > 0) {

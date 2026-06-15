@@ -62,7 +62,7 @@ public class CarCliHelper {
     public static void option2(CarBookingService carBookingService, Scanner scanner) {
         System.out.println("Please enter booking ID");
 
-        var result = carBookingService.deleteBooking(UUID.fromString(scanner.nextLine()));
+        var result = carBookingService.cancelBooking(UUID.fromString(scanner.nextLine()));
 
         if (result) {
             System.out.println("Cancelled booking");

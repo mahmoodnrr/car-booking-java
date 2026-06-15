@@ -57,13 +57,13 @@ public class CarBookingService {
                 );
     }
 
-    public boolean deleteBooking(UUID bookingId) {
+    public boolean cancelBooking(UUID bookingId) {
 
         List<CarBooking> bookings = carBookingDao.getAllBookings();
 
         for (CarBooking carBooking : bookings) {
             if (carBooking.getId().equals(bookingId))
-                return carBookingDao.deleteBooking(bookingId);
+                return carBookingDao.cancelBooking(bookingId);
         }
 
         return false;
