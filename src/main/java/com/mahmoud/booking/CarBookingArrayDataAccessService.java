@@ -2,18 +2,12 @@ package com.mahmoud.booking;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class CarBookingArrayDataAccessService implements CarBookingDao {
 
-    private static List<CarBooking> carBookings;
+    private final List<CarBooking> carBookings = new ArrayList<>();
 
-    static {
-        carBookings = new ArrayList<>();
-    }
-
-    @Override
     public void saveBooking(CarBooking carBooking) {
         carBookings.add(carBooking);
     }
@@ -24,7 +18,7 @@ public class CarBookingArrayDataAccessService implements CarBookingDao {
     }
 
     @Override
-    public boolean deleteBooking(UUID bookingId) {
+    public boolean cancelBooking(UUID bookingId) {
 
         CarBooking car = carBookings.stream()
                 .filter(carBooking -> carBooking.getId().equals(bookingId))

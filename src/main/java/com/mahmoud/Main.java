@@ -3,11 +3,11 @@ package com.mahmoud;
 import com.mahmoud.booking.CarBookingDao;
 import com.mahmoud.booking.CarBookingFileDataAccessService;
 import com.mahmoud.booking.CarBookingService;
-import com.mahmoud.car.CarArrayDataAccessService;
 import com.mahmoud.car.CarDao;
+import com.mahmoud.car.CarFakerDataAccessService;
 import com.mahmoud.car.CarService;
-import com.mahmoud.user.UserArrayDataAccessService;
 import com.mahmoud.user.UserDao;
+import com.mahmoud.user.UserFakerDataAccessService;
 import com.mahmoud.user.UserService;
 import com.mahmoud.utility.CarCliHelper;
 
@@ -18,12 +18,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-        UserDao userDao = new UserArrayDataAccessService();
-        CarDao carDao = new CarArrayDataAccessService();
+        UserDao userDao = new UserFakerDataAccessService();
+        CarDao carDao = new CarFakerDataAccessService();
 
         CarService carService = new CarService(carDao);
         UserService userService = new UserService(userDao);
-        CarBookingDao carBookingDao = new CarBookingFileDataAccessService("carbookings.dat");
+        CarBookingDao carBookingDao = new CarBookingFileDataAccessService("src/main/resources/carbookings.dat");
 
         CarBookingService carBookingService = new CarBookingService(carBookingDao, carService, userService);
 

@@ -4,5 +4,10 @@ public enum Brand {
     TESLA,
     MERCEDES,
     BMW,
-    TOYOTA
+    TOYOTA,
+    VOLKSWAGEN,
+    HONDA,
+    NISSAN,
+    HYUNDAI,
+    KIA
 }

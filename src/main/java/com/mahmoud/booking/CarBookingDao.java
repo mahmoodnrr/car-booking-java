@@ -9,5 +9,5 @@ public interface CarBookingDao {
 
     List<CarBooking> getAllBookings();
 
-    boolean deleteBooking(UUID bookingId);
+    boolean cancelBooking(UUID bookingId);
 }
